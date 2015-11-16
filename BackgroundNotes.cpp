@@ -7,7 +7,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
-#include <SFML/Graphics.hpp>
+//#include <SFML/Graphics.hpp>
 
 std::vector<std::string> LoadData()
 {
@@ -48,31 +48,60 @@ void Help()
 	std::cout<<std::endl;
 }
 
-void Add()
+void Add(std::vector<std::string> &s, std::string str)
 {
 	//go to add prompt and stuff
+	str.erase(0, 4);
+	s.push_back(str);
+	std::cout<<"Successfully added.\n"<<std::endl;
 }
 
-void Delete(int i)
+void Delete(std::vector<std::string> &s, std::string str)
 {
 	//delete stuff
+	str.erase(0, 7);
+	s.erase(s.begin() + std::stoi(str));
+	std::cout<<"Successfully erased.\n"<<std::endl;
 }
 
-void Modify(int i)
+void Modify(std::vector<std::string> &s, int i, std::string str)
 {
 	//modify stuff
+	s[i] = str;
+	std::cout<<"Succesfully modified.\n"<<std::endl;
 }
 
-void Clear()
+void Clear(std::vector<std::string> &s)
 {
+	begin:
+	char c;
+	std::cout<<"Are you sure? (y/n): ";
+	std::cin>>c;
+	if(c == 'y')
+	{
+		s.clear();
+		SaveData(s);
+	}
+	else if(c == 'n')
+	{
+		return;
+	}
+	else
+	{
+		std::cout<<"Try again."<<std::endl;
+		goto begin;
+	}
 }
 
-void Save()
+void Save(std::vector<std::string> s)
 {
+	SaveData(s);
+	std::cout<<"data successfully saved.\n"<<std::endl;
 }
 
-void Exit()
+void Exit(std::vector<std::string> s)
 {
+	SaveData(s);
 }
 
 void GeneralDisplay(std::vector<std::string> s)
@@ -87,7 +116,7 @@ void GeneralDisplay(std::vector<std::string> s)
 	std::cout<<std::endl;
 }
 
-void ParseInput()
+void ParseInput(std::vector<std::string> &s)
 {
 	begin:
 	//get input
@@ -98,17 +127,17 @@ void ParseInput()
 	if(str == "-help")
 		Help();
 	else if(str == "-add")
-		Add();
+		Add(s, str);
 	else if(str == "-delete")
-		Add();
+		Delete(s, str);
 	else if(str == "-modify")
-		Add();
+		Modify(s, 1, NULL);
 	else if(str == "-clear")
-		Add();
+		Clear(s);
 	else if(str == "-save")
-		Add();
+		Save(s);
 	else if(str == "-exit")
-		Exit();
+		Exit(s);
 	else
 	{
 		std::cout<<"Nope. Try again, type -help for help.\n"<<std::endl;
@@ -145,71 +174,6 @@ void CreateImage(std::vector<std::string> strings)
 
 int main()
 {
-	/*std::vector<std::string> strings = LoadData(); //Load current strings
-
-	sf::RenderWindow window; window.create(sf::VideoMode(200, 400), "BackgroundNotes");
-	bool controlBool(false);
-	while(window.isOpen())
-	{
-		sf::Event Event;
-		while(window.pollEvent(Event))
-		{
-			switch(Event.type)
-			{
-			case sf::Event::KeyPressed:
-				//control bool
-				if(Event.key.code == sf::Keyboard::Key::LControl)
-					controlBool = true;
-				if(Event.key.code == sf::Keyboard::Key::RControl)
-					controlBool = true;
-
-				//saving
-				if(Event.key.code == sf::Keyboard::Key::S && controlBool == true)
-				{
-					SaveData(strings);
-					CreateImage(strings);
-					SetBackground("data/background.jpg");
-				}
-
-				//copying
-				if(Event.key.code == sf::Keyboard::Key::C && controlBool == true)
-				{
-					//copying stuff
-				}
-				break;
-
-			case sf::Event::KeyReleased:
-				//control bool
-				if(Event.key.code == sf::Keyboard::Key::LControl)
-					controlBool = false;
-				if(Event.key.code == sf::Keyboard::Key::RControl)
-					controlBool = false;
-				break;
-
-			case sf::Event::MouseButtonPressed:
-				break;
-
-			case sf::Event::MouseButtonReleased:
-				break;
-
-			case sf::Event::Resized:
-				break;
-
-			case sf::Event::Closed:
-				window.close();
-				break;
-			}
-		}
-	}
-	//create a window and in for loop. Under keys, if pressed ctr + s: CreateImage() and SetBackground() and SaveData().
-	//in normal window thing make it a simple .txt document lookalike with specific -commands
-
-	//Create image based on strings
-
-	//Exiting!
-	SaveData(strings);
-	SetBackground();*/
-
 	//Display intro
 	std::cout<<"Background Notes [Version 0.0.0.1]"<<std::endl;
 	std::cout<<"(c) 2015 Swift Studios. All rights reserved.\n"<<std::endl;
@@ -221,7 +185,7 @@ int main()
 	while(1)
 	{
 		GeneralDisplay(strings);
-		ParseInput();
+		ParseInput(strings);
 	}
 
 	SaveData(strings);
