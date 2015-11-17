@@ -38,12 +38,12 @@ void Help()
 {
 	//display help stuff
 	std::cout<<"For more help, contact Nicholas Swift at www.nicholas-swift.com/contact.html"<<std::endl;
-	std::cout<<"-help         Get a list of possible commands to use"<<std::endl;
-	std::cout<<"-add          Add a new note"<<std::endl;
-	std::cout<<"-delete       Delete a note"<<std::endl;
-	std::cout<<"-modify       Modify a note"<<std::endl;
-	std::cout<<"-save         Save"<<std::endl;
-	std::cout<<"-exit         Safely exit"<<std::endl;
+	std::cout<<"help         Get a list of possible commands to use"<<std::endl;
+	std::cout<<"add          Add a new note"<<std::endl;
+	std::cout<<"delete       Delete a note"<<std::endl;
+	std::cout<<"modify       Modify a note"<<std::endl;
+	std::cout<<"save         Save"<<std::endl;
+	std::cout<<"exit         Safely exit"<<std::endl;
 
 	std::cout<<std::endl;
 }
@@ -60,14 +60,34 @@ void Delete(std::vector<std::string> &s, std::string str)
 {
 	//delete stuff
 	str.erase(0, 7);
-	s.erase(s.begin() + std::stoi(str));
+	if(std::stoi(str) > s.size() - 1)
+		{}
+	else
+		s.erase(s.begin() + std::stoi(str));
 	std::cout<<"Successfully erased.\n"<<std::endl;
 }
 
-void Modify(std::vector<std::string> &s, int i, std::string str)
+void Modify(std::vector<std::string> &s, std::string str)
 {
 	//modify stuff
-	s[i] = str;
+	str.erase(0, 7);
+	std::string sentence = str;
+	int num = 0;
+	for(int i = 0; i < str.size(); i++)
+	{
+		if(i == ' ')	
+		{
+			//str.erase(i-1, str.size() - i);
+			std::cout<<str<<std::endl;
+			num = std::stoi(str);
+			//sentence.erase(0, i);
+			//break;
+		}
+	}
+	std::cout<<num<<std::endl;
+	//std::cout<<sentence<<std::endl;
+	//s[num] = sentence;
+
 	std::cout<<"Succesfully modified.\n"<<std::endl;
 }
 
@@ -122,25 +142,27 @@ void ParseInput(std::vector<std::string> &s)
 	//get input
 	std::string str;
 	std::cout<<">";
-	std::cin>>str;
+	//std::cin>>str;
+	//std::cin.getline(str, str.size());
+	std::getline(std::cin, str);
 
-	if(str == "-help")
+	if(str == "help")
 		Help();
-	else if(str == "-add")
+	else if(str[0] == 'a' && str[1] == 'd' && str[2] == 'd') //add
 		Add(s, str);
-	else if(str == "-delete")
+	else if(str[0] == 'd' && str[1] == 'e' && str[2] == 'l' && str[3] == 'e' && str[4] == 't' && str[5] == 'e') //delete
 		Delete(s, str);
-	else if(str == "-modify")
-		Modify(s, 1, NULL);
-	else if(str == "-clear")
+	else if(str[0] == 'm' && str[1] == 'o' && str[2] == 'd' && str[3] == 'i' && str[4] == 'f' && str[5] == 'y') //modify
+		Modify(s, str);
+	else if(str == "clear")
 		Clear(s);
-	else if(str == "-save")
+	else if(str == "save")
 		Save(s);
-	else if(str == "-exit")
+	else if(str == "exit")
 		Exit(s);
 	else
 	{
-		std::cout<<"Nope. Try again, type -help for help.\n"<<std::endl;
+		std::cout<<"Nope. Try again, type help for help.\n"<<std::endl;
 		goto begin;
 	}
 }
