@@ -53,7 +53,8 @@ void Add(std::vector<std::string> &s, std::string str)
 	//go to add prompt and stuff
 	str.erase(0, 4);
 	s.push_back(str);
-	std::cout<<"Successfully added.\n"<<std::endl;
+
+	std::cout<<std::endl;
 }
 
 void Delete(std::vector<std::string> &s, std::string str)
@@ -64,7 +65,8 @@ void Delete(std::vector<std::string> &s, std::string str)
 		{}
 	else
 		s.erase(s.begin() + std::stoi(str));
-	std::cout<<"Successfully erased.\n"<<std::endl;
+
+	std::cout<<std::endl;
 }
 
 void Modify(std::vector<std::string> &s, std::string str)
@@ -72,23 +74,21 @@ void Modify(std::vector<std::string> &s, std::string str)
 	//modify stuff
 	str.erase(0, 7);
 	std::string sentence = str;
-	int num = 0;
+	int num = -1;
+
 	for(int i = 0; i < str.size(); i++)
 	{
-		if(i == ' ')	
+		if(str[i] == ' ')
 		{
-			//str.erase(i-1, str.size() - i);
-			std::cout<<str<<std::endl;
-			num = std::stoi(str);
-			//sentence.erase(0, i);
-			//break;
+			str.erase(i, str.size()-i);
+			sentence.erase(0, i+1);
 		}
 	}
-	std::cout<<num<<std::endl;
-	//std::cout<<sentence<<std::endl;
-	//s[num] = sentence;
 
-	std::cout<<"Succesfully modified.\n"<<std::endl;
+	num = std::stoi(str);
+	s[num] = sentence;
+
+	std::cout<<std::endl;
 }
 
 void Clear(std::vector<std::string> &s)
@@ -119,9 +119,10 @@ void Save(std::vector<std::string> s)
 	std::cout<<"data successfully saved.\n"<<std::endl;
 }
 
-void Exit(std::vector<std::string> s)
+void Exit(std::vector<std::string> s, bool &b)
 {
 	SaveData(s);
+	b = true;
 }
 
 void GeneralDisplay(std::vector<std::string> s)
@@ -136,7 +137,7 @@ void GeneralDisplay(std::vector<std::string> s)
 	std::cout<<std::endl;
 }
 
-void ParseInput(std::vector<std::string> &s)
+void ParseInput(std::vector<std::string> &s, bool &b)
 {
 	begin:
 	//get input
@@ -159,7 +160,7 @@ void ParseInput(std::vector<std::string> &s)
 	else if(str == "save")
 		Save(s);
 	else if(str == "exit")
-		Exit(s);
+		Exit(s, b);
 	else
 	{
 		std::cout<<"Nope. Try again, type help for help.\n"<<std::endl;
@@ -204,10 +205,13 @@ int main()
 	std::vector<std::string> strings = LoadData();
 
 	//while loop
+	bool exit = false;
 	while(1)
 	{
 		GeneralDisplay(strings);
-		ParseInput(strings);
+		ParseInput(strings, exit);
+		if(exit)
+			break;
 	}
 
 	SaveData(strings);
