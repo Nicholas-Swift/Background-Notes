@@ -7,7 +7,10 @@
 #include <fstream>
 #include <vector>
 #include <string>
-//#include <SFML/Graphics.hpp>
+#include <time.h>
+
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
 
 std::vector<std::string> LoadData()
 {
@@ -55,6 +58,8 @@ void Add(std::vector<std::string> &s, std::string str)
 	s.push_back(str);
 
 	std::cout<<std::endl;
+
+	SaveData(s);
 }
 
 void Delete(std::vector<std::string> &s, std::string str)
@@ -62,11 +67,18 @@ void Delete(std::vector<std::string> &s, std::string str)
 	//delete stuff
 	str.erase(0, 7);
 	if(std::stoi(str) > s.size() - 1)
-		{}
+	{
+		std::cout<<"Did not delete."<<std::endl;
+		std::cout<<"Reason: number too high."<<std::endl;
+		std::cout<<std::endl;
+	}
 	else
+	{
 		s.erase(s.begin() + std::stoi(str));
+		std::cout<<std::endl;
+	}
 
-	std::cout<<std::endl;
+	SaveData(s);
 }
 
 void Modify(std::vector<std::string> &s, std::string str)
@@ -86,9 +98,20 @@ void Modify(std::vector<std::string> &s, std::string str)
 	}
 
 	num = std::stoi(str);
-	s[num] = sentence;
 
-	std::cout<<std::endl;
+	if(num > s.size()-1)
+	{
+		std::cout<<"Did not modify."<<std::endl;
+		std::cout<<"Reason: number too high."<<std::endl;
+		std::cout<<std::endl;
+	}
+	else
+	{
+		s[num] = sentence;
+		std::cout<<std::endl;
+	}
+
+	SaveData(s);
 }
 
 void Clear(std::vector<std::string> &s)
@@ -111,12 +134,14 @@ void Clear(std::vector<std::string> &s)
 		std::cout<<"Try again."<<std::endl;
 		goto begin;
 	}
+
+	SaveData(s);
 }
 
 void Save(std::vector<std::string> s)
 {
 	SaveData(s);
-	std::cout<<"data successfully saved.\n"<<std::endl;
+	std::cout<<"Data successfully saved.\n"<<std::endl;
 }
 
 void Exit(std::vector<std::string> s, bool &b)
@@ -163,37 +188,53 @@ void ParseInput(std::vector<std::string> &s, bool &b)
 		Exit(s, b);
 	else
 	{
-		std::cout<<"Nope. Try again, type help for help.\n"<<std::endl;
+		std::cout<<"Did not work."<<std::endl;
+		std::cout<<"Reason: command not recognized."<<std::endl;
+		std::cout<<"Type 'help' for help."<<std::endl;
+		std::cout<<std::endl;
 		goto begin;
 	}
 }
 
-/*void SetBackground(std::string p)
+bool SetBackground()
 {
-	std::string sPath = p;
-	char cPath[150];
-	strcpy(cPath, sPath.c_str());
-	char *pPath;
-	pPath = cPath;
+	std::string filePath;
+	const std::string strLocalDirectory = "C:\\Users\\Nick\\Documents\\1. Nick Stuff\\Programming\\(X) Projects 3\\BackgroundNotes\\Release\\"; // TWEAKED PATH
 
-	std::cout<<pPath<<std::endl;
+	int dirSize = 5;  //Will be automated later. 
+	int bgChoice = 0; //Index of chosen wallpaper. 
+  
+	srand ( (unsigned int)time(NULL) );
+	bgChoice = rand() % dirSize + 1;
+	//Convert the index choice into a usable filename string.
+	std::stringstream ssFilePath;
+	//ssFilePath << strLocalDirectory << bgChoice << ".jpg";
+	ssFilePath << strLocalDirectory << "output.jpg";
+	//Returns true on success, false otherwise. 
+	if( SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, (PVOID)ssFilePath.str().c_str(), SPIF_UPDATEINIFILE | SPIF_SENDCHANGE) != 0)
+	{
+		filePath = ssFilePath.str();
+		std::cout<<filePath<<std::endl;
+		return true;
+	}
 
-    int result;
-    result = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, pPath, SPIF_UPDATEINIFILE);
-
-    if(result)
-        std::cout<<"Wallpaper set";
-    else
-        std::cout<<"Wallpaper not set";
+	return false;
 }
 
 void CreateImage(std::vector<std::string> strings)
 {
-	sf::Image background;
-	background.create(1366, 768, sf::Color::White);
+	//create the background
+	cv::Mat image(480, 640, CV_8UC3);
 
-	background.saveToFile("data/background.jpg");
-} */
+	//add the text
+	for(int i = 0; i < strings.size(); i++)
+	{
+		cv::putText(image, strings[i], cvPoint(10, 20*i + 20), CV_FONT_HERSHEY_SIMPLEX, 0.5, cvScalar(255, 255, 255));
+	}
+
+	//save the image
+    cv::imwrite("output.jpg", image);
+}
 
 int main()
 {
@@ -215,6 +256,19 @@ int main()
 	}
 
 	SaveData(strings);
+	CreateImage(strings);
+
+	if(SetBackground())
+	{ 
+		std::cout <<"Applied Background";
+	}
+	else
+	{  
+		DWORD DWLastError = GetLastError();
+		std::cout << "\nError: " << std::hex << DWLastError;
+	}
+
+	//std::cin.get();
 
 	return 0;
 }
