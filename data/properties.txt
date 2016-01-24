@@ -1,5 +1,0 @@
-1366
-768
-left
-default
-default
