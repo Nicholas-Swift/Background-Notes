@@ -1,7 +1,7 @@
 # Background-Notes
 Notes directly on your desktop background! A work in progress. A program requested by a friend.
 
-# The Code
+# The C# Code
 Form1.cs is a simple C# form that I quickly wrote up to provide an interface to type in without having it be a command prompt program. There isn't much to it.
 
 ====================================================================
@@ -49,4 +49,5 @@ private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 }
 ```
 
-====================================================================
+#The C++/SFML Code
+
