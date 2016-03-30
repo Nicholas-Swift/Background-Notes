@@ -55,7 +55,11 @@ The C++ and SFML code goes through the actual creation of the image and then goe
 ====================================================================
 
 I'll go over the actual code once I have more work done on it. To give you the gist of it...
+
  -> Open notes.txt and save all text
+ 
  -> Create/Open the background image
+ 
  -> Add all text to the image
+ 
  -> Set it as the background.
