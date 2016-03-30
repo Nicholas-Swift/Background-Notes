@@ -2,7 +2,7 @@
 Notes directly on your desktop background! A work in progress. A program requested by a friend.
 
 # The C# Code
-Form1.cs is a simple C# form that I quickly wrote up to provide an interface to type in without having it be a command prompt program. There isn't much to it.
+Form1.cs is a simple C# form that I quickly wrote up to provide an interface to type in without having it be a command prompt program. There isn't much to it. Still a work in progress!
 
 ====================================================================
 
@@ -50,4 +50,12 @@ private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 ```
 
 #The C++/SFML Code
+The C++ and SFML code goes through the actual creation of the image and then goes through setting it as the background. Currently this is only for windows, but again, work in progress! It'll be for all operating systems <3
 
+====================================================================
+
+I'll go over the actual code once I have more work done on it. To give you the gist of it...
+ -> Open notes.txt and save all text
+ -> Create/Open the background image
+ -> Add all text to the image
+ -> Set it as the background.
